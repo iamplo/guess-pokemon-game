@@ -5,7 +5,7 @@ import StartGame from "./pokemon/start-game";
 import { Status } from "./pokemon/types";
 import "./app.css";
 
-function Game() {
+function App() {
   const { data } = usePokemonSpecies();
 
   const [status, setStatus] = useState<Status>("NOT_READY");
@@ -35,4 +35,4 @@ function Game() {
   );
 }
 
-export default Game;
+export default App;
