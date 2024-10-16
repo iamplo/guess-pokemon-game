@@ -13,3 +13,7 @@ export interface FormElements extends HTMLFormControlsCollection {
 export interface GuessFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
+
+export type PokemonResults = object[];
+
+export type Cache = { data?: PokemonResults[] };

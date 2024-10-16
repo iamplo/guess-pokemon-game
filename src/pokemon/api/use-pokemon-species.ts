@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-
-type PokemonResults = {}[];
-
-type Cache = { data?: PokemonResults[] };
+import { Cache } from "../types";
 
 function usePokemonSpecies() {
   const [cache, setCache] = useState<Cache>({});
@@ -18,7 +15,6 @@ function usePokemonSpecies() {
 
   useEffect(() => {
     if (!cache.data) {
-      console.info("Caching data..");
       getPokemonSpecies()
         .then((data) => {
           setCache({ data });
@@ -28,7 +24,7 @@ function usePokemonSpecies() {
           setErrorMsg("Service Unavailable");
         });
     }
-  }, [cache?.data]);
+  }, [cache?.data, getPokemonSpecies]);
 
   return { data: cache.data, isError, errorMsg };
 }
