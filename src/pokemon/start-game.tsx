@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import usePokemonSpecies from "./api/use-pokemon-species";
 import InputGuess from "./input-guess";
-import { Feedback, GuessFormElement, Status } from "./types";
+import { Feedback, GuessFormElement, PokemonResults, Status } from "./types";
 import GameFeedback from "./game-feedback";
 import usePokemonSprite from "./api/use-pokemon-sprite";
 import Sprite from "./sprite";
@@ -9,6 +8,7 @@ import useUpdateHighScore from "./api/use-update-high-score";
 
 type Props = {
   appState: Status;
+  data: PokemonResults[];
   setAppState: (state: Status) => void;
 };
 
@@ -16,9 +16,7 @@ const CONFIG = {
   defaultAttemps: 3,
 };
 
-function StartGame({ setAppState, appState }: Props) {
-  const { data } = usePokemonSpecies();
-
+function StartGame({ setAppState, appState, data }: Props) {
   const { mutate } = useUpdateHighScore();
 
   const [msg, setMsg] = useState<Feedback>();
@@ -36,9 +34,9 @@ function StartGame({ setAppState, appState }: Props) {
 
   const onStart = () => {
     reset();
-    const random = Math.floor(Math.random() * data?.length!) + 1;
-    // @ts-expect-error
-    const select = data?.[random].name!;
+    const random = Math.floor(Math.random() * data?.length) + 1;
+    // @ts-expect-error incomplete type def
+    const select = data?.[random].name;
     setPokemonName(select);
   };
 
@@ -56,9 +54,9 @@ function StartGame({ setAppState, appState }: Props) {
   const onNext = () => {
     setAppState("IN_PROGRESS");
     setMsg(undefined);
-    const random = Math.floor(Math.random() * data?.length!) + 1;
+    const random = Math.floor(Math.random() * data?.length) + 1;
     // @ts-expect-error-ignore
-    const name = data?.[random].name!;
+    const name = data?.[random].name;
     setPokemonName(name);
   };
 
@@ -100,7 +98,7 @@ function StartGame({ setAppState, appState }: Props) {
       .catch((e) => {
         console.log(e);
       });
-  }, []);
+  }, [mutate, score]);
 
   useEffect(() => {
     if (attempts === 0) {
@@ -108,7 +106,7 @@ function StartGame({ setAppState, appState }: Props) {
       setMsg("NO_GUESSES_LEFT");
       updateHighScore(score);
     }
-  }, [attempts, score]);
+  }, [attempts, score, setAppState, updateHighScore]);
 
   return (
     <div>

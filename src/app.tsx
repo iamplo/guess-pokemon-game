@@ -28,7 +28,11 @@ function App() {
         isError={status === "ERROR"}
       >
         {status !== "NOT_READY" && (
-          <StartGame appState={status} setAppState={setGameState} />
+          <StartGame
+            appState={status}
+            setAppState={setGameState}
+            data={data!}
+          />
         )}
       </ErrorBoundary>
     </div>
